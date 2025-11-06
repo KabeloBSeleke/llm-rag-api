@@ -1,0 +1,11 @@
+chromadb
+fastapi
+langchain
+langchain-community
+langchain-core
+langchain-huggingface
+langchain-text-splitters
+ollama
+pydantic-settings
+sentence-transformers
+uvicorn[standard]

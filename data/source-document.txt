@@ -1,0 +1,205 @@
+Fictional ISP: StarConnect Internet
+Category: First Line Troubleshooting and Support Guide
+Version: 1.0
+Date: 2025-10-29
+
+===========================================================
+SECTION 1: GENERAL ACCOUNT & CONNECTIVITY ISSUES
+===========================================================
+
+TOPIC: Customer Has No Internet Access
+SYMPTOMS:
+- Router power light is off or blinking
+- Wi-Fi connected but "No Internet" message on devices
+- LAN-connected devices cannot access websites
+
+TROUBLESHOOTING STEPS:
+1. Verify power source and ensure router is plugged in.
+2. Confirm power and WAN lights are on and stable.
+3. Ask the customer to reboot the router and wait 2–3 minutes.
+4. Confirm whether the issue affects all devices or specific ones.
+5. If all devices are affected, check for an outage using the Network Dashboard.
+6. If the customer uses a third-party router, ensure WAN/PPPoE credentials are correct.
+7. If still offline, escalate to second-line support.
+
+EXPECTED OUTCOME:
+- Customer regains Internet connection OR
+- Issue escalated with logs and connection status noted.
+
+-----------------------------------------------------------
+
+TOPIC: Slow Internet Speeds
+SYMPTOMS:
+- Websites loading slowly
+- Buffering during video streaming
+- Speed test below subscribed package rate
+
+TROUBLESHOOTING STEPS:
+1. Ask customer to connect directly via LAN to rule out Wi-Fi issues.
+2. Run a speed test on https://speed.starconnect.net.
+3. Check number of connected devices; disconnect unused ones.
+4. Restart router to clear possible network congestion.
+5. Confirm no heavy downloads, torrents, or updates are running.
+6. Check signal strength (for wireless connections).
+7. Verify line profile and bandwidth allocation in CRM system.
+8. Escalate if issue persists after isolation steps.
+
+-----------------------------------------------------------
+
+TOPIC: Intermittent Connection Drops
+SYMPTOMS:
+- Internet disconnects randomly and reconnects after a few minutes
+- Router lights flashing intermittently
+- VoIP calls dropping mid-session
+
+TROUBLESHOOTING STEPS:
+1. Verify if drops occur on Wi-Fi only or all devices.
+2. Check for scheduled maintenance or area outages.
+3. Ensure router firmware is up to date.
+4. Check DSL/Fiber signal levels via support dashboard.
+5. Ask customer to test with a different LAN cable if possible.
+6. If fiber, ensure PON light is stable (not blinking red).
+7. Collect timestamps of disconnections for escalation.
+
+-----------------------------------------------------------
+
+TOPIC: Customer Forgot Wi-Fi Password
+TROUBLESHOOTING STEPS:
+1. Ask for router model (found on sticker).
+2. Guide customer to access router admin page (e.g., http://192.168.1.1).
+3. Log in using default credentials (often printed on router label).
+4. Navigate to Wireless Settings → SSID → Password.
+5. Reset Wi-Fi password and update all devices accordingly.
+
+===========================================================
+SECTION 2: BILLING & ACCOUNT ENQUIRIES
+===========================================================
+
+TOPIC: Customer Cannot Log In to Customer Portal
+TROUBLESHOOTING STEPS:
+1. Confirm correct username (registered email).
+2. Ask customer to reset password via “Forgot Password” link.
+3. Verify that account is active and not suspended.
+4. Clear browser cache and try again.
+5. Escalate to billing if login fails after reset.
+
+-----------------------------------------------------------
+
+TOPIC: Service Suspended
+SYMPTOMS:
+- Internet cut off with redirection to payment portal
+
+TROUBLESHOOTING STEPS:
+1. Confirm outstanding balance in CRM.
+2. Advise customer to make payment via online portal or EFT.
+3. Once payment reflects, reconnect service in CRM manually if not automatic.
+4. Confirm customer can browse websites again.
+
+===========================================================
+SECTION 3: ROUTER SETUP & CONFIGURATION
+===========================================================
+
+TOPIC: Router Setup (PPPoE)
+INSTRUCTIONS:
+1. Connect router to power and ONT/modem via WAN port.
+2. Access router web interface (192.168.1.1).
+3. Enter PPPoE username and password provided in welcome email.
+4. Save and reboot router.
+5. Confirm Internet access by browsing any website.
+
+-----------------------------------------------------------
+
+TOPIC: Changing Wi-Fi Name (SSID)
+INSTRUCTIONS:
+1. Log into router web interface.
+2. Navigate to Wireless → SSID → Edit.
+3. Enter preferred network name.
+4. Save and reboot router.
+
+-----------------------------------------------------------
+
+TOPIC: Factory Reset Router
+INSTRUCTIONS:
+1. Hold reset button for 10–15 seconds.
+2. Wait for router lights to stabilize.
+3. Reconfigure connection settings (PPPoE credentials required).
+
+===========================================================
+SECTION 4: FIBER CONNECTION SPECIFIC ISSUES
+===========================================================
+
+TOPIC: Red LOS (Loss of Signal) Light on ONT
+SYMPTOMS:
+- No Internet access
+- LOS or PON light flashing red
+
+TROUBLESHOOTING STEPS:
+1. Ensure fiber patch cable is firmly inserted.
+2. Inspect for cable damage or bending.
+3. Verify power to ONT.
+4. If LOS persists, report as fiber fault to NOC.
+
+-----------------------------------------------------------
+
+TOPIC: Slow Fiber Upload Speeds
+TROUBLESHOOTING STEPS:
+1. Check if customer using VPN or upload-heavy applications.
+2. Test speed using wired connection.
+3. Verify ONT signal levels in monitoring portal.
+4. Escalate to network team if signal power levels outside acceptable range.
+
+===========================================================
+SECTION 5: VOIP & HOME PHONE ISSUES
+===========================================================
+
+TOPIC: No Dial Tone
+TROUBLESHOOTING STEPS:
+1. Confirm VoIP adapter has power and LAN connectivity.
+2. Check SIP registration status.
+3. Reboot router and VoIP device.
+4. Test with different handset if available.
+
+-----------------------------------------------------------
+
+TOPIC: Calls Dropping or Poor Call Quality
+SYMPTOMS:
+- One-way audio or dropped calls
+- Echo or distortion
+
+TROUBLESHOOTING STEPS:
+1. Check if issue occurs on Wi-Fi or LAN.
+2. Confirm sufficient bandwidth (VoIP QoS enabled).
+3. Restart router and phone adapter.
+4. Run ping test to check latency and packet loss.
+
+===========================================================
+SECTION 6: ESCALATION PROCEDURES
+===========================================================
+
+LEVEL 1 SUPPORT:
+- Handle power, reboot, and configuration-related issues.
+- Collect full customer info: name, account number, contact.
+- Record router model, connection type, and error lights.
+
+LEVEL 2 SUPPORT:
+- Handles line tests, signal verification, and remote configuration.
+- Requests ONT/DSL logs if needed.
+
+LEVEL 3 SUPPORT (NOC):
+- Handles infrastructure-level faults and outages.
+
+===========================================================
+SECTION 7: COMMON TERMS
+===========================================================
+- ONT: Optical Network Terminal
+- PPPoE: Point-to-Point Protocol over Ethernet
+- NOC: Network Operations Center
+- QoS: Quality of Service
+- LAN: Local Area Network
+- WAN: Wide Area Network
+- SSID: Wireless Network Name
+- CRM: Customer Relationship Management system
+
+===========================================================
+END OF DOCUMENT
+===========================================================

@@ -1,0 +1,44 @@
+
+services:
+  llm-model:
+    image: ollama/ollama:latest
+    command: serve
+    container_name: ollama_llm
+    environment:
+      - OLLAMA_MODELS=/root/.ollama/models
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+
+  ingester:
+    build: . 
+    container_name: ingester
+    command: ["python", "ingest.py"]
+    environment:
+      - COLLECTION_NAME=${COLLECTION_NAME}
+      - DATA_PATH=${DATA_PATH}
+      - VECTOR_STORE_PATH=${VECTOR_STORE_PATH}
+      - OLLAMA_URL=${OLLAMA_URL}
+    depends_on:
+      - llm-model
+
+  rag-api:
+    build: . # Build from the current directory (using our Dockerfile)
+    container_name: rag_api
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./chroma_db:/app/chroma_db
+      - .:/app
+    depends_on:
+      - ingester
+    environment:
+      - LLM_MODEL=${LLM_MODEL}
+      - OLLAMA_URL=${OLLAMA_URL}
+      - COLLECTION_NAME=${COLLECTION_NAME}
+      - VECTOR_STORE_PATH=${VECTOR_STORE_PATH}
+   
+volumes:
+  ollama_data:
