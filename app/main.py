@@ -91,7 +91,7 @@ def health_check():
     return {"status": "We are live and on air!."}
 
 
-# # 2. RAG Query Endpoint
+# 2. RAG Query Endpoint
 @app.post("/query", response_model=QueryResponse, summary="Query RAG Service")
 async def query_rag_endpoint(request: QueryRequest):
     if RAG_SERVICE.vectorstore is None:
