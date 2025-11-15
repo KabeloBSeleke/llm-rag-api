@@ -1,8 +1,14 @@
 from langchain_community.vectorstores import Chroma
 from langchain_community.llms import Ollama
-from langchain.chains.combine_documents.stuff import create_stuff_documents_chain
-from langchain.chains import create_retrieval_chain
+# from langchain.chains.retrieval import create_retrieval_chain
+# from langchain.chains.combine_documents import create_stuff_documents_chain
+# from langchain.chains import create_retrieval_chain
+# from langchain.chains.combine_documents import create_stuff_documents_chain
+
 from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.runnables import RunnablePassthrough
+from langchain_core.output_parsers import StrOutputParser
+
 from langchain_huggingface import HuggingFaceEmbeddings
 import os
 
@@ -58,29 +64,31 @@ class RAGService:
             base_url=self.ollama_url
         )
 
-        # Set prompt template
-        system_prompt = ChatPromptTemplate.from_template(
-            "Use the given context to answer the user's question. "
-            "If you don't know the answer, say that you don't know. "
-            "Context: {context}"
-        )
-        prompt = ChatPromptTemplate.from_messages(
-            [
-                ("system", system_prompt),
-                ("user", "{input}")
-            ]
-        )
+        # Create a retriever
+        retriever = self.vectorstore.as_retriever()
 
-        # create doc combo chain
-        question_answer_chain = create_stuff_documents_chain(
-            llm=llm,
-            prompt=prompt
-        )
+        # Define the prompt template
+        template = """Use the given context to answer the user's question.
+            If you don't know the answer, say that you don't know.
+            Context: {context}
+            Question: {question}
 
-        # retrieve chain
-        self.qa_chain = create_retrieval_chain(
-            self.vectorstore.as_retriever(),
-            question_answer_chain
+            Answer:"""
+        
+        prompt = ChatPromptTemplate.from_template(template)
+
+        # Create chain using LCEL
+        def format_docs(docs):
+            return "\n\n".join(doc.page_content for doc in docs)
+        
+        self.qa_chain = (
+            {
+                "context": retriever|format_docs,
+                "question": RunnablePassthrough()
+            }
+            | prompt
+            | llm
+            | StrOutputParser()
         )
 
         # query method
@@ -90,7 +98,7 @@ class RAGService:
             raise RuntimeError("QA chain is not initialized. Please initialize it first.")
 
         # Invoke the QA chain with the question
-        result = self.qa_chain.invoke({"input": question})
-        return result['answer']
+        result = self.qa_chain.invoke(question)
+        return result
 
 
