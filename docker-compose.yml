@@ -43,4 +43,4 @@ services:
       - VECTOR_STORE_PATH=${VECTOR_STORE_PATH}
    
 # volumes:
-#   ollama_data: 
+#   ollama_data:
