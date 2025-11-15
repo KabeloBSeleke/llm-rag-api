@@ -1,11 +1,13 @@
-chromadb
 fastapi
+google-generativeai
 langchain
+langchain-chroma
 langchain-community
 langchain-core
+# langchain-google-genai
+langchain-groq
 langchain-huggingface
 langchain-text-splitters
-ollama
 pydantic-settings
 sentence-transformers
 uvicorn[standard]

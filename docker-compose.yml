@@ -1,15 +1,15 @@
 
 services:
-  llm-model:
-    image: ollama/ollama:latest
-    command: serve
-    container_name: ollama_llm
-    environment:
-      - OLLAMA_MODELS=/root/.ollama/models
-    ports:
-      - "11434:11434"
-    volumes:
-      - ollama_data:/root/.ollama
+  # llm-model:
+  #   image: ollama/ollama:latest
+  #   command: serve
+  #   container_name: ollama_llm
+  #   environment:
+  #     - OLLAMA_MODELS=/root/.ollama/models
+  #   ports:
+  #     - "11434:11434"
+  #   volumes:
+  #     - ollama_data:/root/.ollama
 
   ingester:
     build: . 
@@ -19,9 +19,11 @@ services:
       - COLLECTION_NAME=${COLLECTION_NAME}
       - DATA_PATH=${DATA_PATH}
       - VECTOR_STORE_PATH=${VECTOR_STORE_PATH}
-      - OLLAMA_URL=${OLLAMA_URL}
-    depends_on:
-      - llm-model
+      - API_KEY=${API_KEY}
+    volumes:
+      - ./chroma_db:/app/chroma_db  # Added: shared volume with rag-api
+      - ./data:/app/data 
+    
 
   rag-api:
     build: . # Build from the current directory (using our Dockerfile)
@@ -36,9 +38,9 @@ services:
       - ingester
     environment:
       - LLM_MODEL=${LLM_MODEL}
-      - OLLAMA_URL=${OLLAMA_URL}
+      - API_KEY=${API_KEY}
       - COLLECTION_NAME=${COLLECTION_NAME}
       - VECTOR_STORE_PATH=${VECTOR_STORE_PATH}
    
-volumes:
-  ollama_data:
+# volumes:
+#   ollama_data:

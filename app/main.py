@@ -5,13 +5,13 @@ import os
 import time
 
 
-OLLAMA_URL = os.getenv("OLLAMA_URL", "http://llm-model:11434")
+API_KEY = os.getenv("API_KEY")
 RAG_SERVICE = None
 
 # Initialize fast API app
 app = FastAPI(
     title="RAG Service API",
-    description="API for the Retrieval-Augmented Generation (RAG) service using LangChain and Ollama.",
+    description="API for the Retrieval-Augmented Generation (RAG) service using LangChain and Llama 3.",
     version="1.0.0"
 )
 
@@ -32,14 +32,20 @@ class QueryResponse(BaseModel):
 async def startup_event():
 
     global RAG_SERVICE
-    RAG_SERVICE = RAGService(ollama_url=OLLAMA_URL)
+    RAG_SERVICE = RAGService()
 
     MAX_RETRIES = 5
     RETRY_DELAY = 10
 
+    # Check API key
+    if not API_KEY:
+        print("LLM API Key not set.")
+        return
+
     # Load embedding model
     try:
         RAG_SERVICE.load_embedding_model()
+        print("Embedding model loaded successfully.")
     except Exception as e:
         print(f"Failed to load embedding model. Error: {str(e)}")
         return
@@ -53,7 +59,7 @@ async def startup_event():
         load_status = "failed"
 
     # Load llm chain with retries
-    if "loaded" in load_status.lower():
+    if "successfully" in load_status.lower():
         for i in range(MAX_RETRIES):
             try:
                 RAG_SERVICE.init_qa_chain()
@@ -62,12 +68,12 @@ async def startup_event():
             except Exception as e:
                 # Check if this was the last attempt
                 if i < MAX_RETRIES - 1:
-                    print(f"⚠️ LLM connection failed (Attempt {i+1}/{MAX_RETRIES}). Retrying in {RETRY_DELAY}s.")
+                    print(f"LLM connection failed (Attempt {i+1}/{MAX_RETRIES}). Retrying in {RETRY_DELAY}s.")
                     print(f"Error detail: {str(e)}")
                     time.sleep(RETRY_DELAY)
                 else:
                     # Last attempt failed: log a FATAL error and break
-                    print(f"🛑 FATAL: Failed to initialize QA Chain after {MAX_RETRIES} attempts.")
+                    print(f"FATAL: Failed to initialize QA Chain after {MAX_RETRIES} attempts.")
                     print(f"The service will start, but the /query endpoint will return a 503 error until the LLM is ready. Error: {str(e)}")
                     # Do not re-raise the exception; let FastAPI start gracefully
 
@@ -81,6 +87,7 @@ def health_check():
         raise HTTPException(status_code=503,
                             detail="Vector store not initialized."
                             )
+    print(str(RAG_SERVICE.vectorstore))
     return {"status": "We are live and on air!."}
 
 
